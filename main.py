@@ -27,28 +27,27 @@ def get_file():
 
 def map_bits(width, height, depth, all_pixel_data):
     count = 0
-    pixel_data = "#"
+    pixel_data = []
     horizontal_line = []
     bit_map = []
 
     for byte in all_pixel_data:
         if len(byte) < 2:
             byte = "0" + byte
-        pixel_data += byte
+        pixel_data.append(byte)
         count += 1
 
         if count == 3:
             count = 0
 
-            horizontal_line.append(pixel_data)
-            pixel_data = "#"
+            pixel_data.append("#")
+            pixel_data = reversed(pixel_data)
+            horizontal_line.append("".join(pixel_data))
+            pixel_data = []
 
             if len(horizontal_line) == width:
-                horizontal_line = horizontal_line[::-1]
                 bit_map.insert(0, horizontal_line)
                 horizontal_line = []
-    for line in bit_map:
-        print(line)
     plot_image(width, height, depth, bit_map)
 
 def plot_image(width, height, depth, bit_map):
@@ -57,7 +56,6 @@ def plot_image(width, height, depth, bit_map):
 
     for v_pixel in range(height):
         for h_pixel in range(width):
-            print(v_pixel, h_pixel)
             canvas_image.create_rectangle(h_pixel, v_pixel, h_pixel, v_pixel, outline=bit_map[v_pixel][h_pixel])
         canvas_image.update()
 
