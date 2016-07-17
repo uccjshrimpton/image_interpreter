@@ -1,10 +1,10 @@
 from tkinter import *
 from tkinter.filedialog import askopenfile
+canvas_exists = False
 
 def get_file():
     image_file = askopenfile(parent=main_window, title='Select a Bitmap File')
     image_file = open(image_file.name, "rb")
-    print(image_file.name)
     all_bytes = list(image_file.read())
 
     for index, byte in enumerate(all_bytes):
@@ -51,8 +51,15 @@ def map_bits(width, height, depth, all_pixel_data):
     plot_image(width, height, depth, bit_map)
 
 def plot_image(width, height, depth, bit_map):
-    canvas_image = Canvas(main_window, width=width, height=height)
-    canvas_image.pack()
+    global canvas_exists
+    global canvas_image
+    if canvas_exists == False:
+        canvas_image = Canvas(main_window, width=width, height=height)
+        canvas_image.pack()
+        canvas_exists = True
+
+    else:
+        canvas_image.delete("all")
 
     for v_pixel in range(height):
         for h_pixel in range(width):
@@ -63,7 +70,6 @@ main_window = Tk()
 main_window.title("Bitmap Interpreter")
 
 button_open = Button(main_window, text="Open Bitmap", command=get_file)
-
 button_open.pack()
 
 main_window.mainloop()
