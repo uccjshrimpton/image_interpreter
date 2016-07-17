@@ -2,7 +2,9 @@ from tkinter import *
 from tkinter.filedialog import askopenfile
 
 def get_file():
-    image_file = askopenfile(parent=main_window, title='Select a Bitmap File').read("rb")
+    image_file = askopenfile(parent=main_window, title='Select a Bitmap File')
+    image_file = open(image_file.name, "rb")
+    print(image_file.name)
     all_bytes = list(image_file.read())
 
     for index, byte in enumerate(all_bytes):
@@ -21,18 +23,48 @@ def get_file():
 
     # pixel data stored from bottom right to top left
     all_pixel_data = all_bytes[offset:]
+    map_bits(width, height, depth, all_pixel_data)
 
-def create_canvas():
-    print()
+def map_bits(width, height, depth, all_pixel_data):
+    count = 0
+    pixel_data = "#"
+    horizontal_line = []
+    bit_map = []
 
-def plot_image():
-    print()
+    for byte in all_pixel_data:
+        if len(byte) < 2:
+            byte = "0" + byte
+        pixel_data += byte
+        count += 1
 
+        if count == 3:
+            count = 0
+
+            horizontal_line.append(pixel_data)
+            pixel_data = "#"
+
+            if len(horizontal_line) == width:
+                horizontal_line = horizontal_line[::-1]
+                bit_map.insert(0, horizontal_line)
+                horizontal_line = []
+    for line in bit_map:
+        print(line)
+    plot_image(width, height, depth, bit_map)
+
+def plot_image(width, height, depth, bit_map):
+    canvas_image = Canvas(main_window, width=width, height=height)
+    canvas_image.pack()
+
+    for v_pixel in range(height):
+        for h_pixel in range(width):
+            print(v_pixel, h_pixel)
+            canvas_image.create_rectangle(h_pixel, v_pixel, h_pixel, v_pixel, outline=bit_map[v_pixel][h_pixel])
+        canvas_image.update()
 
 main_window = Tk()
 main_window.title("Bitmap Interpreter")
 
-button_open = Button(main_window, text="Open Bitmap", command=create_canvas)
+button_open = Button(main_window, text="Open Bitmap", command=get_file)
 
 button_open.pack()
 
