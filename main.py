@@ -1,3 +1,4 @@
+#this program uses the Tkinter canvas widget and a number of small coloured square-stamps to replicate an image file.
 from tkinter import *
 from tkinter.filedialog import askopenfile
 canvas_exists = False
