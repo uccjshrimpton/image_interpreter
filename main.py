@@ -1,5 +1,4 @@
 #this program uses the Tkinter canvas widget and a number of small coloured square-stamps to replicate an image file.
-#this is just a test to check that GIT is working correctly.
 from tkinter import *
 from tkinter.filedialog import askopenfile
 canvas_exists = False
